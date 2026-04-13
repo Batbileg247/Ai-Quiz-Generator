@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { articleId: string } }
+  // Update: params is now a Promise
+  { params }: { params: Promise<{ articleId: string }> },
 ) {
   try {
     const { userId } = await auth();
@@ -12,13 +13,17 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Update: Await the params before accessing properties
+    const { articleId } = await params;
+
     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const article = await prisma.article.findFirst({
-      where: { id: params.articleId, userId: user.id },
+      // Use the destructured articleId here
+      where: { id: articleId, userId: user.id },
       include: {
         quizzes: {
           orderBy: { createdAt: "desc" },
@@ -37,7 +42,7 @@ export async function GET(
     console.error("[/api/article] error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
