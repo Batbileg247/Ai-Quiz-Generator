@@ -1,37 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Article Quiz Generator
 
-## Getting Started
+An AI-powered app that summarizes articles and generates quizzes using Gemini AI. Built with Next.js 15, shadcn/ui, Tailwind CSS, Prisma, PostgreSQL, and Clerk.
 
-First, run the development server:
+## Tech Stack
+
+- **Next.js 15** — App Router, server + client components
+- **Clerk** — Authentication (email/password + social login)
+- **Gemini 1.5 Flash** — AI summarization and quiz generation
+- **Prisma ORM** — Type-safe database access
+- **PostgreSQL** — Data storage
+- **shadcn/ui** — UI component library
+- **Tailwind CSS** — Styling
+- **Vercel** — Deployment
+
+## Project Structure
+
+```
+quiz-app/
+├── app/
+│   ├── api/
+│   │   ├── articles/route.ts          # GET all articles for user
+│   │   ├── generate/route.ts          # POST summarize article
+│   │   └── article/[articleId]/
+│   │       ├── route.ts               # GET single article
+│   │       └── quizzes/route.ts       # POST generate quiz
+│   ├── dashboard/page.tsx             # Protected dashboard
+│   ├── globals.css
+│   └── layout.tsx
+├── components/
+│   ├── ui/                            # shadcn/ui components
+│   ├── article-detail.tsx             # Summary + quiz UI
+│   ├── article-form.tsx               # Article input form
+│   └── dashboard-layout.tsx           # Sidebar layout
+├── lib/
+│   ├── gemini.ts                      # Gemini AI helpers
+│   ├── prisma.ts                      # Prisma singleton
+│   └── utils.ts                       # cn() utility
+├── prisma/
+│   └── schema.prisma                  # DB schema
+├── middleware.ts                      # Clerk route protection
+└── .env.example
+```
+
+## Setup
+
+### 1. Clone and install dependencies
+
+```bash
+git clone <your-repo>
+cd quiz-app
+npm install
+```
+
+### 2. Configure environment variables
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in `.env.local`:
+
+```env
+# Clerk — https://dashboard.clerk.com
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+
+# PostgreSQL
+DATABASE_URL="postgresql://postgres:password@localhost:5432/quizapp"
+
+# Gemini — https://aistudio.google.com/app/apikey
+GEMINI_API_KEY=AIzaSy...
+```
+
+### 3. Set up the database
+
+Make sure PostgreSQL is running, then:
+
+```bash
+npm run db:push      # Push schema to database
+npm run db:generate  # Generate Prisma client
+```
+
+### 4. Install additional required packages
+
+```bash
+npm install @radix-ui/react-label @radix-ui/react-separator @radix-ui/react-scroll-area @radix-ui/react-slot tailwindcss-animate
+```
+
+### 5. Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploying to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push your code to GitHub
+2. Import project in [Vercel](https://vercel.com)
+3. Add all environment variables from `.env.local`
+4. Add a PostgreSQL database (Vercel Postgres or Neon)
+5. Deploy
 
-## Learn More
+## User Flow
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Ai-Quiz-Generator
+1. **Sign up / Sign in** via Clerk (email or Google)
+2. **Paste an article** title and content on the dashboard
+3. Click **Generate summary** → Gemini AI creates a concise summary
+4. Click **Generate quiz** → Gemini creates 5 multiple-choice questions
+5. **Take the quiz** and see your score with correct answers highlighted
+6. All articles are saved in the **sidebar history** for revisiting
