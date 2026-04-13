@@ -5,7 +5,8 @@ import { generateQuizFromArticle } from "@/lib/ai";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { articleId: string } },
+  // 1. Change the type to Promise
+  { params }: { params: Promise<{ articleId: string }> },
 ) {
   try {
     const { userId } = await auth();
@@ -13,13 +14,17 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // 2. Await the params before accessing articleId
+    const { articleId } = await params;
+
     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const article = await prisma.article.findFirst({
-      where: { id: params.articleId, userId: user.id },
+      // 3. Use the awaited articleId
+      where: { id: articleId, userId: user.id },
     });
 
     if (!article) {
