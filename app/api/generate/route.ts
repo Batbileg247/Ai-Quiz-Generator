@@ -20,12 +20,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get real email from Clerk
     const clerkUser = await currentUser();
     const email =
       clerkUser?.emailAddresses?.[0]?.emailAddress ?? `${userId}@clerk.user`;
 
-    // Upsert by clerkId — update email in case it changed
     const user = await prisma.user.upsert({
       where: { clerkId: userId },
       update: { email },

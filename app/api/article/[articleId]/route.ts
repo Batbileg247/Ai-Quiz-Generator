@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  // Update: params is now a Promise
   { params }: { params: Promise<{ articleId: string }> },
 ) {
   try {
@@ -13,7 +12,6 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Update: Await the params before accessing properties
     const { articleId } = await params;
 
     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
@@ -22,7 +20,6 @@ export async function GET(
     }
 
     const article = await prisma.article.findFirst({
-      // Use the destructured articleId here
       where: { id: articleId, userId: user.id },
       include: {
         quizzes: {

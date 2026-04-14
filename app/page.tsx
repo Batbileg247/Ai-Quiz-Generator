@@ -6,7 +6,6 @@ import { Sparkles, BookOpen, Brain } from "lucide-react";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Navbar */}
       <header className="border-b">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2 font-semibold text-sm">
@@ -31,7 +30,6 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Hero */}
       <main className="flex-1 flex items-center justify-center px-4">
         <div className="max-w-2xl text-center space-y-6">
           <div className="inline-flex items-center gap-2 bg-muted px-3 py-1 rounded-full text-sm text-muted-foreground">
@@ -66,7 +64,6 @@ export default function HomePage() {
             </SignedIn>
           </div>
 
-          {/* Feature grid */}
           <div className="grid grid-cols-3 gap-4 pt-8">
             {[
               {

@@ -6,7 +6,9 @@ import { ArticleForm } from "@/components/article-form";
 import { ArticleDetail } from "@/components/article-detail";
 
 export default function DashboardPage() {
-  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(
+    null,
+  );
   const [newArticleId, setNewArticleId] = useState<string | null>(null);
 
   const activeId = selectedArticleId ?? newArticleId;

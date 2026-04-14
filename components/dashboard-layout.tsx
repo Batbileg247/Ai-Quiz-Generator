@@ -43,7 +43,6 @@ export function DashboardLayout({
     }
   };
 
-  // Expose refresh method via event
   useEffect(() => {
     const handler = () => fetchArticles();
     window.addEventListener("articles:refresh", handler);
@@ -52,14 +51,12 @@ export function DashboardLayout({
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar */}
       <aside
         className={cn(
           "flex flex-col border-r bg-card transition-all duration-200 ease-in-out flex-shrink-0",
-          sidebarOpen ? "w-60" : "w-0 overflow-hidden border-r-0"
+          sidebarOpen ? "w-60" : "w-0 overflow-hidden border-r-0",
         )}
       >
-        {/* Sidebar header */}
         <div className="flex h-14 items-center justify-between px-4 border-b flex-shrink-0">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Sparkles className="h-4 w-4" />
@@ -74,8 +71,6 @@ export function DashboardLayout({
             <PanelLeftClose className="h-4 w-4" />
           </Button>
         </div>
-
-        {/* History list */}
         <div className="flex-1 overflow-hidden flex flex-col">
           <div className="px-4 pt-4 pb-2">
             <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -97,25 +92,22 @@ export function DashboardLayout({
                     "w-full text-left px-3 py-2 rounded-md text-sm transition-colors mb-0.5",
                     selectedArticleId === article.id
                       ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                   )}
                 >
-                  <span className="line-clamp-2 leading-snug">{article.title}</span>
+                  <span className="line-clamp-2 leading-snug">
+                    {article.title}
+                  </span>
                 </button>
               ))
             )}
           </ScrollArea>
         </div>
-
-        {/* Bottom user area */}
         <div className="border-t p-3 flex items-center justify-between flex-shrink-0">
           <UserButton afterSignOutUrl="/" />
         </div>
       </aside>
-
-      {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Topbar when sidebar closed */}
         {!sidebarOpen && (
           <div className="flex h-14 items-center gap-3 border-b px-4 flex-shrink-0">
             <Button
