@@ -1,26 +1,18 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/auth-helpers";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ articleId: string }> },
 ) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = await requireUser();
+    if ("error" in auth) return auth.error;
 
     const { articleId } = await params;
-
-    const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     const article = await prisma.article.findFirst({
-      where: { id: articleId, userId: user.id },
+      where: { id: articleId, userId: auth.user.id },
       include: {
         quizzes: {
           orderBy: { createdAt: "desc" },
@@ -30,13 +22,10 @@ export async function GET(
       },
     });
 
-    if (!article) {
+    if (!article)
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
-    }
-
     return NextResponse.json(article);
-  } catch (err: unknown) {
-    console.error("[/api/article] error:", err);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

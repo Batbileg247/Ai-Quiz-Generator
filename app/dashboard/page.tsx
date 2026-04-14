@@ -1,9 +1,9 @@
 "use client";
 
+import { ArticleDetail } from "@/components/article/ArticleDetail";
+import { ArticleForm } from "@/components/article/ArticleForm";
+import { DashboardLayout } from "@/components/DashboardLayout";
 import { useState, useCallback } from "react";
-import { DashboardLayout } from "@/components/dashboard-layout";
-import { ArticleForm } from "@/components/article-form";
-import { ArticleDetail } from "@/components/article-detail";
 
 export default function DashboardPage() {
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(
@@ -40,7 +40,7 @@ export default function DashboardPage() {
               }}
             />
           ) : (
-            <ArticleForm onArticleCreated={handleArticleCreated} />
+            <ArticleForm onCreated={handleArticleCreated} />
           )}
         </div>
       </div>
