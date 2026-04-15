@@ -13,7 +13,6 @@ export async function requireUser() {
   return { userId, user }
 }
 
-/** Upserts the user — used on article creation where we want to auto-create */
 export async function upsertUser(userId: string) {
   const clerkUser = await currentUser()
   const email = clerkUser?.emailAddresses?.[0]?.emailAddress ?? `${userId}@clerk.user`

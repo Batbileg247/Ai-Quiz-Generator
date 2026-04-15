@@ -16,7 +16,7 @@ export async function summarizeArticle(content: string) {
 export interface QuizQuestion {
   question: string
   options: string[]
-  answer: string // index as string e.g. "0"
+  answer: string
 }
 
 export async function generateQuizFromArticle(content: string): Promise<QuizQuestion[]> {

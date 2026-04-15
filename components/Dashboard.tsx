@@ -5,7 +5,7 @@ import { ArticleForm } from "@/components/article/ArticleForm";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { useState, useCallback } from "react";
 
-export default function DashboardPage() {
+export function DashboardPage() {
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(
     null,
   );
